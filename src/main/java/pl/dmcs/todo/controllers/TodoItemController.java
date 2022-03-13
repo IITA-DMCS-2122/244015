@@ -1,36 +1,35 @@
-package pl.dmcs.todo;
+package pl.dmcs.todo.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import pl.dmcs.todo.dto.TodoItemDto;
+import pl.dmcs.todo.services.TodoItemService;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.NEVER)
 public class TodoItemController {
 
     private final TodoItemService todoItemService;
 
     @PostMapping("/todo")
-    public void addTodoItem(@RequestBody TodoItem todoItem) {
+    public void addTodoItem(@RequestBody TodoItemDto todoItem) {
         todoItemService.addTodoItem(todoItem);
     }
 
     @GetMapping("/todo/{uuid}")
-    public TodoItem getTodoItem(@PathVariable String uuid) {
+    public TodoItemDto getTodoItem(@PathVariable String uuid) {
         return todoItemService.getTodoItem(uuid);
     }
 
     @GetMapping("/todos")
-    public List<TodoItem> getTodoItems() {
+    public List<TodoItemDto> getTodoItems() {
         return todoItemService.getTodoItems();
     }
 
     @PutMapping("/todo")
-    public void editTodoItem(@RequestBody TodoItem todoItem) {
+    public void editTodoItem(@RequestBody TodoItemDto todoItem) {
         todoItemService.editTodoItem(todoItem);
     }
 
