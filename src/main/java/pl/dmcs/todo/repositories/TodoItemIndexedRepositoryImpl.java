@@ -18,7 +18,8 @@ public class TodoItemIndexedRepositoryImpl implements TodoItemIndexedRepository 
                 .search(TodoItemEntity.class)
                 .where(f -> f.match()
                         .fields("name")
-                        .matching(query))
+                        .matching(query)
+                        .fuzzy())
                 .fetchAllHits();
     }
 }
