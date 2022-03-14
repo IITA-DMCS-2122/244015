@@ -7,7 +7,7 @@ import pl.dmcs.todo.model.TodoItemEntity;
 
 @Repository
 @Transactional
-public interface TodoItemEntityRepository extends JpaRepository<TodoItemEntity, Long> {
+public interface TodoItemEntityRepository extends JpaRepository<TodoItemEntity, Long>, TodoItemIndexedRepository {
 
     TodoItemEntity findByUuid(String uuid);
     void deleteByUuid(String uuid);

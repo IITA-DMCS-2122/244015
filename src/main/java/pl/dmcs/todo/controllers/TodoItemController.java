@@ -28,6 +28,11 @@ public class TodoItemController {
         return todoItemService.getTodoItems();
     }
 
+    @GetMapping("/todos/{query}")
+    public List<TodoItemDto> searchTodoItems(@PathVariable String query) {
+        return todoItemService.searchTodoItems(query);
+    }
+
     @PutMapping("/todo")
     public void editTodoItem(@RequestBody TodoItemDto todoItem) {
         todoItemService.editTodoItem(todoItem);
