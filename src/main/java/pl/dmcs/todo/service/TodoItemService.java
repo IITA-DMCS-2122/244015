@@ -1,14 +1,15 @@
-package pl.dmcs.todo.services;
+package pl.dmcs.todo.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.dmcs.todo.converters.TodoItemDocumentConverter;
-import pl.dmcs.todo.converters.TodoItemEntityConverter;
+import pl.dmcs.todo.converter.TodoItemDocumentConverter;
+import pl.dmcs.todo.converter.TodoItemEntityConverter;
 import pl.dmcs.todo.dto.TodoItemDto;
-import pl.dmcs.todo.model.TodoItemEntity;
-import pl.dmcs.todo.repositories.TodoItemDocumentRepository;
-import pl.dmcs.todo.repositories.TodoItemEntityRepository;
+import pl.dmcs.todo.entity.TodoItemEntity;
+import pl.dmcs.todo.repository.analytics.TodoItemAnalyticsRepository;
+import pl.dmcs.todo.repository.document.TodoItemDocumentRepository;
+import pl.dmcs.todo.repository.primary.TodoItemEntityRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,11 +21,14 @@ public class TodoItemService {
 
     private final TodoItemEntityRepository todoItemEntityRepository;
     private final TodoItemDocumentRepository todoItemDocumentRepository;
+    private final TodoItemAnalyticsRepository todoItemAnalyticsRepository;
 
     public void addTodoItem(TodoItemDto todoItem) {
         todoItem.setUuid(UUID.randomUUID().toString());
-        todoItemEntityRepository.saveAndFlush(TodoItemEntityConverter.toEntity(todoItem));
+        TodoItemEntity todoItemEntity = TodoItemEntityConverter.toEntity(todoItem);
+        todoItemEntityRepository.saveAndFlush(todoItemEntity);
         todoItemDocumentRepository.save(TodoItemDocumentConverter.toDocument(todoItem));
+        todoItemAnalyticsRepository.saveAndFlush(todoItemEntity);
     }
 
     public TodoItemDto getTodoItem(String uuid) {
@@ -40,9 +44,9 @@ public class TodoItemService {
     }
 
     public void editTodoItem(TodoItemDto todoItem) {
-        TodoItemEntity temp = todoItemEntityRepository.findByUuid(todoItem.getUuid());
-        temp.setName(todoItem.getName());
-        temp.setDone(todoItem.isDone());
+        TodoItemEntity todoItemEntity = todoItemEntityRepository.findByUuid(todoItem.getUuid());
+        todoItemEntity.setName(todoItem.getName());
+        todoItemEntity.setDone(todoItem.isDone());
         todoItemDocumentRepository.save(TodoItemDocumentConverter.toDocument(todoItem));
     }
 

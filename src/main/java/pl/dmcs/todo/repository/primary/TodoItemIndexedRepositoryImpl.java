@@ -1,13 +1,13 @@
-package pl.dmcs.todo.repositories;
+package pl.dmcs.todo.repository.primary;
 
 import org.hibernate.search.mapper.orm.Search;
-import pl.dmcs.todo.model.TodoItemEntity;
+import pl.dmcs.todo.entity.TodoItemEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-public class TodoItemIndexedRepositoryImpl implements TodoItemIndexedRepository {
+class TodoItemIndexedRepositoryImpl implements TodoItemIndexedRepository {
 
     @PersistenceContext
     private EntityManager entityManager;

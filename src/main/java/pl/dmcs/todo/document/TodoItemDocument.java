@@ -1,4 +1,4 @@
-package pl.dmcs.todo.model;
+package pl.dmcs.todo.document;
 
 import lombok.Builder;
 import lombok.Data;

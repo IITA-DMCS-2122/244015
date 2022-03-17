@@ -1,9 +1,9 @@
-package pl.dmcs.todo.controllers;
+package pl.dmcs.todo.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import pl.dmcs.todo.dto.TodoItemDto;
-import pl.dmcs.todo.services.TodoItemService;
+import pl.dmcs.todo.service.TodoItemService;
 
 import java.util.List;
 

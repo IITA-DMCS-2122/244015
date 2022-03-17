@@ -1,8 +1,8 @@
-package pl.dmcs.todo.converters;
+package pl.dmcs.todo.converter;
 
 import lombok.experimental.UtilityClass;
+import pl.dmcs.todo.document.TodoItemDocument;
 import pl.dmcs.todo.dto.TodoItemDto;
-import pl.dmcs.todo.model.TodoItemDocument;
 
 import java.util.List;
 

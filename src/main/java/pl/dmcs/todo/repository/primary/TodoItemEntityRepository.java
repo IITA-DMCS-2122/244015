@@ -1,9 +1,9 @@
-package pl.dmcs.todo.repositories;
+package pl.dmcs.todo.repository.primary;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import pl.dmcs.todo.model.TodoItemEntity;
+import pl.dmcs.todo.entity.TodoItemEntity;
 
 @Repository
 @Transactional
