@@ -1,4 +1,4 @@
-package pl.dmcs.todo.entity;
+package pl.dmcs.todo.entity.primary;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

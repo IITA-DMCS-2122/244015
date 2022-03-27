@@ -34,7 +34,7 @@ public class PrimaryDataSourceConfiguration {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder) {
         return builder
                 .dataSource(dataSource())
-                .packages("pl.dmcs.todo.entity")
+                .packages("pl.dmcs.todo.entity.primary")
                 .properties(Map.of(
                         "hibernate.hbm2ddl.auto", "update",
                         "hibernate.physical_naming_strategy", "org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy"

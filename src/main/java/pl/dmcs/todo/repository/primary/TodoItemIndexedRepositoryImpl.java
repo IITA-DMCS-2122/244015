@@ -1,7 +1,7 @@
 package pl.dmcs.todo.repository.primary;
 
 import org.hibernate.search.mapper.orm.Search;
-import pl.dmcs.todo.entity.TodoItemEntity;
+import pl.dmcs.todo.entity.primary.TodoItemEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

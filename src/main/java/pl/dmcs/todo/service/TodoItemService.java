@@ -3,10 +3,11 @@ package pl.dmcs.todo.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.dmcs.todo.converter.TodoItemAnalyticsEntityConverter;
 import pl.dmcs.todo.converter.TodoItemDocumentConverter;
 import pl.dmcs.todo.converter.TodoItemEntityConverter;
 import pl.dmcs.todo.dto.TodoItemDto;
-import pl.dmcs.todo.entity.TodoItemEntity;
+import pl.dmcs.todo.entity.primary.TodoItemEntity;
 import pl.dmcs.todo.repository.analytics.TodoItemAnalyticsRepository;
 import pl.dmcs.todo.repository.document.TodoItemDocumentRepository;
 import pl.dmcs.todo.repository.primary.TodoItemEntityRepository;
@@ -25,10 +26,9 @@ public class TodoItemService {
 
     public void addTodoItem(TodoItemDto todoItem) {
         todoItem.setUuid(UUID.randomUUID().toString());
-        TodoItemEntity todoItemEntity = TodoItemEntityConverter.toEntity(todoItem);
-        todoItemEntityRepository.saveAndFlush(todoItemEntity);
+        todoItemEntityRepository.saveAndFlush(TodoItemEntityConverter.toEntity(todoItem));
         todoItemDocumentRepository.save(TodoItemDocumentConverter.toDocument(todoItem));
-        todoItemAnalyticsRepository.saveAndFlush(todoItemEntity);
+        todoItemAnalyticsRepository.saveAndFlush(TodoItemAnalyticsEntityConverter.toEntity(todoItem));
     }
 
     public TodoItemDto getTodoItem(String uuid) {

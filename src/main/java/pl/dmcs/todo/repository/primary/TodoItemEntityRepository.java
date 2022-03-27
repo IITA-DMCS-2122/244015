@@ -3,7 +3,7 @@ package pl.dmcs.todo.repository.primary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import pl.dmcs.todo.entity.TodoItemEntity;
+import pl.dmcs.todo.entity.primary.TodoItemEntity;
 
 @Repository
 @Transactional

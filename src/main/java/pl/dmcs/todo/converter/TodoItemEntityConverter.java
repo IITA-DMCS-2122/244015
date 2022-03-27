@@ -2,7 +2,7 @@ package pl.dmcs.todo.converter;
 
 import lombok.experimental.UtilityClass;
 import pl.dmcs.todo.dto.TodoItemDto;
-import pl.dmcs.todo.entity.TodoItemEntity;
+import pl.dmcs.todo.entity.primary.TodoItemEntity;
 
 import java.util.List;
 
