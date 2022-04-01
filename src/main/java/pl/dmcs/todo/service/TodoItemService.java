@@ -1,15 +1,14 @@
 package pl.dmcs.todo.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.dmcs.todo.converter.TodoItemAnalyticsEntityConverter;
-import pl.dmcs.todo.converter.TodoItemDocumentConverter;
 import pl.dmcs.todo.converter.TodoItemEntityConverter;
 import pl.dmcs.todo.dto.TodoItemDto;
-import pl.dmcs.todo.entity.primary.TodoItemEntity;
-import pl.dmcs.todo.repository.analytics.TodoItemAnalyticsRepository;
-import pl.dmcs.todo.repository.document.TodoItemDocumentRepository;
+import pl.dmcs.todo.event.Event;
+import pl.dmcs.todo.event.EventAction;
+import pl.dmcs.todo.repository.event.TodoItemEventRepository;
 import pl.dmcs.todo.repository.primary.TodoItemEntityRepository;
 
 import java.util.List;
@@ -20,23 +19,27 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TodoItemService {
 
+    private static final String QUEUE_NAME = "iita-todo";
+    private final RabbitTemplate rabbitTemplate;
+    private final TodoItemEventRepository todoItemEventRepository;
     private final TodoItemEntityRepository todoItemEntityRepository;
-    private final TodoItemDocumentRepository todoItemDocumentRepository;
-    private final TodoItemAnalyticsRepository todoItemAnalyticsRepository;
 
     public void addTodoItem(TodoItemDto todoItem) {
         todoItem.setUuid(UUID.randomUUID().toString());
-        todoItemEntityRepository.saveAndFlush(TodoItemEntityConverter.toEntity(todoItem));
-        todoItemDocumentRepository.save(TodoItemDocumentConverter.toDocument(todoItem));
-        todoItemAnalyticsRepository.saveAndFlush(TodoItemAnalyticsEntityConverter.toEntity(todoItem));
+        Event<TodoItemDto> event = Event.<TodoItemDto>builder()
+                .payload(todoItem)
+                .action(EventAction.ADD)
+                .build();
+        todoItemEventRepository.save(event);
+        rabbitTemplate.convertAndSend(QUEUE_NAME, event);
     }
 
     public TodoItemDto getTodoItem(String uuid) {
-        return TodoItemDocumentConverter.toDto(todoItemDocumentRepository.findByUuid(uuid));
+        return TodoItemEntityConverter.toDto(todoItemEntityRepository.findByUuid(uuid));
     }
 
     public List<TodoItemDto> getTodoItems() {
-        return TodoItemDocumentConverter.toDtos(todoItemDocumentRepository.findAll());
+        return TodoItemEntityConverter.toDtos(todoItemEntityRepository.findAll());
     }
 
     public List<TodoItemDto> searchTodoItems(String query) {
@@ -44,14 +47,27 @@ public class TodoItemService {
     }
 
     public void editTodoItem(TodoItemDto todoItem) {
-        TodoItemEntity todoItemEntity = todoItemEntityRepository.findByUuid(todoItem.getUuid());
-        todoItemEntity.setName(todoItem.getName());
-        todoItemEntity.setDone(todoItem.isDone());
-        todoItemDocumentRepository.save(TodoItemDocumentConverter.toDocument(todoItem));
+        Event<TodoItemDto> event = Event.<TodoItemDto>builder()
+                .payload(todoItem)
+                .action(EventAction.EDIT)
+                .build();
+        todoItemEventRepository.save(event);
+        rabbitTemplate.convertAndSend(QUEUE_NAME, event);
     }
 
     public void deleteTodoItem(String uuid) {
-        todoItemEntityRepository.deleteByUuid(uuid);
-        todoItemDocumentRepository.deleteByUuid(uuid);
+        TodoItemDto todoItem = TodoItemDto.builder()
+                .uuid(uuid)
+                .build();
+        Event<TodoItemDto> event = Event.<TodoItemDto>builder()
+                .payload(todoItem)
+                .action(EventAction.DELETE)
+                .build();
+        todoItemEventRepository.save(event);
+        rabbitTemplate.convertAndSend(QUEUE_NAME, event);
+    }
+
+    public long getTodoItemEventCount() {
+        return todoItemEventRepository.count();
     }
 }

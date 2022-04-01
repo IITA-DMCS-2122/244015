@@ -42,4 +42,9 @@ public class TodoItemController {
     public void deleteTodoItem(@PathVariable String uuid) {
         todoItemService.deleteTodoItem(uuid);
     }
+
+    @GetMapping("/todoEventCount")
+    public long getTodoItemEventCount() {
+        return todoItemService.getTodoItemEventCount();
+    }
 }

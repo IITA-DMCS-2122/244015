@@ -17,7 +17,7 @@ public class TodoItemEntityConverter {
                 .build();
     }
 
-    private TodoItemDto toDto(TodoItemEntity entity) {
+    public TodoItemDto toDto(TodoItemEntity entity) {
         return TodoItemDto.builder()
                 .uuid(entity.getUuid())
                 .name(entity.getName())
